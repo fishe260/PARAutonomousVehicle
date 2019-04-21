@@ -1,0 +1,118 @@
+.root {
+	-fx-font-size: 14px;
+	-fx-font-family: "Consolas";
+	-fx-text-fill: #000000;
+}
+
+.menu .label{
+	-fx-font-family: none;
+	-fx-effect: none;
+}
+
+.menuScene {
+	-fx-background-size: cover;
+	-fx-background-image: url("/resources/MenuBackground.png");
+}
+
+.label {
+	-fx-font-size: 14px;
+	-fx-font-family: "Consolas";
+	-fx-text-fill: #000000;
+	-fx-effect:dropshadow( gaussian, rgba(0,0,0,0.5),0,0,0,1); 
+}
+
+.menuLabel{
+	-fx-font-size: 30px;
+	-fx-text-fill: white;
+}
+
+.menuStartBtn{
+	-fx-font-size: 30px;
+	-fx-font-weight: bold;
+}
+
+.nonsenseLabel{
+	-fx-background-color: rgb(192,192,192);
+	-fx-font-size: 30px;
+	-fx-font-family: "Goudy Stout";
+	-fx-text-fill: linear-gradient(from 0% 0% to 100% 200%, red, green, blue);
+}
+
+.fpsLabel{
+	-fx-background-color: rgb(192,192,192);
+	-fx-effect: none;
+}
+
+.btnsBackground{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.statusBackground{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.barMeterBackground{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.barTitle{
+	-fx-font-size: 18px;
+	-fx-font-weight: bold;
+}
+
+.eStopDefault {
+	-fx-font-size: 18px;
+	-fx-font-style: oblique;
+	-fx-background-color: #FF0000;
+	-fx-text-fill: #000000;
+	-fx-effect:dropshadow( three-pass-box, rgba(0,0,0,0.5),5,0,0,1); 
+}
+
+.eStopEngaged{
+	-fx-font-size: 18px;
+	-fx-font-style: italic;
+	-fx-font-style: oblique;
+	-fx-background-color: #00FF00;
+	-fx-text-fill: #000000;
+	-fx-effect:dropshadow( three-pass-box, rgba(0,0,0,0.5),5,0,0,1); 
+}
+
+.recBtnDefault{
+	-fx-background-image: url("/resources/RecButton.png");
+	-fx-background-size: cover;
+}
+
+.recBtnEngaged{
+	
+}
+
+.modeTitle{
+	-fx-background-color: rgb(192,192,192);	
+}
+
+.modeLabel{
+	-fx-background-color: rgb(192,192,192);
+	-fx-font-size: 20px;
+}
+
+.statusLightOff{
+	-fx-stroke: black; 
+	-fx-fill: crimson;
+}
+
+.statusLightOn{
+	-fx-stroke: black ;
+	-fx-fill: forestgreen; 
+}
+
+.steeringBackground{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.imuInRange{
+	-fx-fill: crimson;	
+}
+
+.imuOutRange{
+	-fx-fill: black;
+}
