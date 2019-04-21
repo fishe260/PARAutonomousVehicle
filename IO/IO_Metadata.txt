@@ -1,0 +1,48 @@
+v1 Metadata
+
+Dates Used: Dec 2017-May 2018
+
+Hardware: 5x Arduino Nanos (8-bit)
+
+Each arduino handles a subsystem.
+
+IO, RFT, RFC, Steering, and Throttle
+------------------------------------
+v2 Metadata
+
+Dates Used: May 2018 - Aug 2018
+
+Hardware: Arduino Due (32-bit)
+
+Central Arduino for all I/O processes, excluding autonomy processing.
+---------------------------------------------------------------------
+v3 Metadata
+
+Dates Used: 8-27-18 to 
+Author: Tyler Mahlmann
+
+Succeeds: v2_2
+
+Hardware: Arduino Due (32-bit)
+
+Description: Arduino IO code for mechatronics, onboard sensors (excluding CV) & telemetry. 
+
+v3.0:
+-Widespread optimization and junk removal.
+-Removed Compass (not as reliable as Gyro for heading calculation)
+-Restored Mission Control
+-Added IMU functionality
+-Added Hall Effect sensor functionality (for current/voltage caluclation)
+-Added confirmation for mode change
+-Additional telemetry values sent (CPU Images per second, Acceleration)
+
+v3.1
+-Switched radio roles (used to be Kart slave/reading, MC master/writing. Flipped)
+-Changed a lot of global variables to local / static variables (because that's faster)
+-Better CPU Communication
+-Seeding steering with absolute encoder values
+
+v3.2
+-Added brake functionality, reverse mode.
+-RTK GPS Communication (Serial)
+-CPU Communication (I2C)
