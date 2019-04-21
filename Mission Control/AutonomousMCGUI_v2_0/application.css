@@ -1,0 +1,122 @@
+.root {
+	-fx-background-image: url("/resources/Trippy.gif");
+	-fx-background-size: cover;
+	 
+	-fx-font-size: 14px;
+	-fx-font-family: "Consolas";
+	-fx-text-fill: #000000;
+}
+
+.menuScene {
+	-fx-background-image: url("/resources/keyboardCat.gif");
+}
+
+.label {
+	-fx-font-size: 14px;
+	-fx-font-family: "Consolas";
+	-fx-text-fill: #000000;
+	-fx-effect:dropshadow( gaussian, rgba(0,0,0,0.5),0,0,0,1); 
+}
+
+.check-box {
+	-fx-background-color: rgb(192,192,192);
+	-fx-font-size: 20px;
+}
+
+.menuLabel{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.menuStartBtn{
+	-fx-background-color: rgb(192,192,192);
+	-fx-font-size: 50px;
+	-fx-font-family: "Comic Sans MS";
+	-fx-text-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);
+	-fx-stroke: black;
+}
+
+.nonsenseLabel{
+	-fx-background-color: rgb(192,192,192);
+	-fx-font-size: 30px;
+	-fx-font-family: "Goudy Stout";
+	-fx-text-fill: linear-gradient(from 0% 0% to 100% 200%, red, green, blue);
+}
+
+.fpsLabel{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.btnsBackground{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.modeAndStatusBackground{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.dialsBackground{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.dialText {
+	-fx-font-size: 11px;
+	-fx-font-family: "Consolas";
+	-fx-effect: none;
+}
+
+.dialNumber{
+	-fx-font-size: 18px;
+}
+
+.eStopDefault {
+	-fx-font-size: 18px;
+	-fx-font-style: italic;
+	-fx-font-style: oblique;
+	-fx-background-color: #FF0000;
+	-fx-text-fill: #000000;
+	-fx-effect:dropshadow( three-pass-box, rgba(0,0,0,0.5),5,0,0,1); 
+}
+
+.eStopEngaged{
+	-fx-font-size: 18px;
+	-fx-font-style: italic;
+	-fx-font-style: oblique;
+	-fx-background-color: #00FF00;
+	-fx-text-fill: #000000;
+	-fx-effect:dropshadow( three-pass-box, rgba(0,0,0,0.5),5,0,0,1); 
+}
+
+.recBtnDefault{
+	-fx-background-image: url("/resources/RecButton.png");
+	-fx-background-size: cover;
+}
+
+.recBtnEngaged{
+	
+}
+
+.modeDisplay{
+	
+}
+
+.statusLightOff{
+	-fx-stroke: black; 
+	-fx-fill: crimson;
+}
+
+.statusLightOn{
+	-fx-stroke: black ;
+	-fx-fill: forestgreen; 
+}
+
+.steeringBackground{
+	-fx-background-color: rgb(192,192,192);
+}
+
+.imuInRange{
+	-fx-fill: crimson;	
+}
+
+.imuOutRange{
+	-fx-fill: black;
+}
