@@ -1,1 +1,39 @@
 This folder contains code for both the mission control module and the mission control GUI
+
+Autonomous Mission Control GUI v1 Metadata
+
+Dates Used: Jan 2018 - Feb 2019
+
+Provided visual diagnostics for kart, including:
+-Current mode
+-EStop button
+-Record button 
+-System status indicators
+-Throttle/brake
+-Speed (never implemented)
+-Voltage
+-Current
+-Power
+-Radio packets per second
+-CPU Images per second (never implemented)
+-Steering meter (desired and actual)
+-IMU Display
+-Mission Control frames per second
+
+Drawbacks:
+-Requires host machine to have Processing installed.
+-Can only be run through Processing 
+------------------------------------------
+Autonomous Mission Control GUI v2 Metadata
+
+v2.0 (Feb 2019)
+Originally the same as v1, but in Java.
+Program can now be packaged into an .exe and installed on other machines easily. 
+Runs much faster than v1
+
+v2.1 (Feb 2019)
+Can change backgrounds
+Program will auto-detect telemetry module
+More professional/clean look than 2.0
+
+v2.2 (March 2019)
