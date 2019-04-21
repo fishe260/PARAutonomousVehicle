@@ -7,4 +7,4 @@ Branch Descriptions
 
 "master": Most recent stable release, what is currently on the kart's hardware.
 
-"testBranch": Software currently in development
+"Test-Branch": Software currently in development
