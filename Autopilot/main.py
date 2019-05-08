@@ -6,6 +6,10 @@ import picamera.array
 from smbus2 import SMBusWrapper	#I2c #has to be installed
 from I2C import writeData, readData #import functions from the I2C file
 
+# Aidan's todos:
+# Work w/ Tyler to ensure proper I2C communication
+# Get RNN training for throttle and steering
+
 # Constants
 numWindows = 9
 l_windows = []
@@ -227,7 +231,9 @@ while (not exitProgram):
     slopeL = (leftLine.averaged_fit())
     slopeR = (rightLine.averaged_fit())
     slope = ((slopeL + slopeR) / 2)[0]
-
+    
+    # TODO: Train a RNN to determine the best slope and throttle
+    # Send steering based on the slope
     if (slope > 0):
         if (slope > 0.25): 
             if (slope > 0.5): 
@@ -244,3 +250,5 @@ while (not exitProgram):
                 writeData(63)
         else:
             writeData(35)
+    # Send throttle (TODO: make better throttle parameters)
+    writeData(127) # Is this a good parameter @Tyler? 
