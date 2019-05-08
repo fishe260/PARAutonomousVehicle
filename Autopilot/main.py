@@ -3,12 +3,15 @@ import numpy as np
 from collections import deque
 import picamera
 import picamera.array
+from smbus2 import SMBusWrapper	#I2c #has to be installed
+from I2C import writeData, readData #import functions from the I2C file
 
 # Constants
 numWindows = 9
 l_windows = []
 r_windows = []
-
+address = 0x04 # Slave Address, set on Arduino
+channel = 1 
 class Window(object):
     """
     Represents a scanning window used to detect points likely to represent lane edge lines.
@@ -16,13 +19,14 @@ class Window(object):
 
     def __init__(self, y1, y2, x, m=100, tolerance=50):
         """
-        Description: Initialises a window object.
-        Inputs: y1          : Top y axis coordinate of the window rect.
-                y2          : Bottom y axis coordinate of the window rect.
-                x           : X coordinate of the center of the window rect
-                m           : X axis span, e.g. window rect width would be m*2..
-                tolerance   : Min number of pixels we need to detect within a window in order to adjust its x coordinate.
-        Outputs: N/A 
+        Initialises a window object.
+        Parameters
+        ----------
+        y1          : Top y axis coordinate of the window rect.
+        y2          : Bottom y axis coordinate of the window rect.
+        x           : X coordinate of the center of the window rect
+        m           : X axis span, e.g. window rect width would be m*2..
+        tolerance   : Min number of pixels we need to detect within a window in order to adjust its x coordinate.
         """
         self.x = x
         self.mean_x = x
@@ -33,9 +37,13 @@ class Window(object):
 
     def pixels_in(self, nonzero, x=None):
         """
-        Description: Returns indices of the pixels in `nonzero` that are located within this window.
-        Inputs: nonzero : coordinates where gradient/color mask is true
-        Outputs: Array of indices of the pixels within this window.
+        Returns indices of the pixels in `nonzero` that are located within this window.
+       Parameters
+        ----------
+        nonzero : Coordinates of the non-zero pixels in the image.
+        Returns
+        -------
+        Array of indices of the pixels within this window.
         """
         if x is not None:
             self.x = x
@@ -52,9 +60,10 @@ class Window(object):
 
     def coordinates(self):
         """
-        Description: Returns coordinates of the bounding rect.
-        Inputs: N/A
-        Outputs: Tuple of ((x1, y1), (x2, y2))
+        Returns coordinates of the bounding rect.
+        Returns
+        -------
+        Tuple of ((x1, y1), (x2, y2))
         """
         return ((self.x - self.m, self.y1), (self.x + self.m, self.y2))
 
@@ -179,13 +188,14 @@ while (not exitProgram):
 
     """ Find lines """
     histogram = np.sum(gradientMask[int(h / 2):, :], axis=0)
-    nonzero = gradientMask.nonzero()
+    nonzero = gradientMask.nonzero() # finds the indices where the (now warped) mask is true
 
     # Create empty lists to receive left and right lane pixel indices
     l_indices = np.empty([0], dtype=np.int)
     r_indices = np.empty([0], dtype=np.int)
     window_height = int(h / numWindows)
 
+    # Determine where the windows need to be placed (windows are used for determining line coords based off of a cluster of nonzero pixels)
     for i in range(9):
         l_window = Window(
             y1=h - (i + 1) * window_height,
@@ -201,6 +211,8 @@ while (not exitProgram):
     # Append nonzero indices in the window boundary to the lists
     l_indices = np.append(l_indices, l_window.pixels_in(nonzero), axis=0)
     r_indices = np.append(r_indices, r_window.pixels_in(nonzero), axis=0)
+
+    # Append respective windows
     l_windows.append(l_window)
     r_windows.append(r_window)
 
@@ -219,16 +231,16 @@ while (not exitProgram):
     if (slope > 0):
         if (slope > 0.25): 
             if (slope > 0.5): 
-                print(255)
+                writeData(255)
             else:
-                print(191)
+                writeData(191)
         else: 
-            print(127)
+            writeData(127)
     elif (slope <= 0):
         if (slope < -0.25):
             if slope( < -0.5):
-                print(0)
+                writeData(0)
             else: 
-                print(63)
+                writeData(63)
         else:
-            print(35)
+            writeData(35)
