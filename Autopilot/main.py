@@ -127,19 +127,21 @@ class Line(object):
 
 #Initialize the camera and the image (which will hold a numpy array)
 camera = picamera.PiCamera()
-stream = picamera.array.PiRGBArray(camera) # Does not store data yet
-
 # Set the camera resolution 
 camera.resolution = (1920, 1080)
+
 
 # Get camera calibration parameters
 # TODO: Make calibraiton program and get horizontal line
 
 exitProgram = False
 while (not exitProgram):
+    stream = picamera.array.PiRGBArray(camera) # Does not store data yet
     # Take photo and make it a numpy array
     camera.capture(stream, format = 'bgr')
     img = stream.array
+    #cv2.imshow('original',img)
+    #cv2.waitKey(0)
 
     #TODO:  Create a while loop which exits when told to by i2c
 
@@ -188,7 +190,11 @@ while (not exitProgram):
     destination = np.float32([[100, 0], [w - 100, 0], [100, h], [w - 100, h]])
     transform_matrix = cv2.getPerspectiveTransform(source, destination)
     image = cv2.warpPerspective(img, transform_matrix, (w, h))
+    #cv2.imshow('birb',image)
+    #cv2.waitKey(0)
     gradientMask = cv2.warpPerspective(gradientMask, transform_matrix, (w, h))
+    #cv2.imshow('maskie boi',gradientMask)
+    #cv2.waitKey(0)
 
     """ Find lines """
     histogram = np.sum(gradientMask[int(h / 2):, :], axis=0)
@@ -205,13 +211,13 @@ while (not exitProgram):
             y1=h - (i + 1) * window_height,
             y2=h - i * window_height,
             x=l_windows[-1].x if len(l_windows) > 0 else np.argmax(histogram[w // 2])
-    )
-    r_window = Window(
-        y1=h - (i + 1) * window_height,
-        y2=h - i * window_height,
-        x=r_windows[-1].x if len(r_windows) > 0 else np.argmax(histogram[w // 2:]) + w // 2
-    )
-
+        )
+        r_window = Window(
+            y1=h - (i + 1) * window_height,
+            y2=h - i * window_height,
+            x=r_windows[-1].x if len(r_windows) > 0 else np.argmax(histogram[w // 2:]) + w // 2
+        )
+    
     # Append nonzero indices in the window boundary to the lists
     l_indices = np.append(l_indices, l_window.pixels_in(nonzero), axis=0)
     r_indices = np.append(r_indices, r_window.pixels_in(nonzero), axis=0)
@@ -220,13 +226,17 @@ while (not exitProgram):
     l_windows.append(l_window)
     r_windows.append(r_window)
 
-    # If either windows are empty, there is an error but we need to keep the cart going. Restart the image processing (hopefully the cart started already). 
-    if (len(l_windows) or len(r_windows) == 0):
+    # If either windows are empty, there is an error but we need to keep the cart going. Restart the image processing (hopefully the cart started already).
+    if ((len(l_windows) == 0)  or (len(r_windows) == 0)):
         continue
 
+    
+    #print([l_indices])
+    #print(np.array(nonzero[1][l_indices]))
     leftLine = Line(x=nonzero[1][l_indices], y=nonzero[0][l_indices], h = h, w = w)
     rightLine = Line(x=nonzero[1][r_indices], y=nonzero[0][r_indices], h=h, w = w)
 
+    print("3")
     # Take the slopes and then average it
     slopeL = (leftLine.averaged_fit())
     slopeR = (rightLine.averaged_fit())
@@ -234,21 +244,31 @@ while (not exitProgram):
     
     # TODO: Train a RNN to determine the best slope and throttle
     # Send steering based on the slope
+    #print("\nSteering Output\n")
     if (slope > 0):
         if (slope > 0.25): 
             if (slope > 0.5): 
                 writeData(255)
+                #print("255: Hard Right")
             else:
                 writeData(191)
+                #print("191: Right")
         else: 
             writeData(127)
+            #print("127: Straight")
     elif (slope <= 0):
         if (slope < -0.25):
-            if slope( < -0.5):
+            if (slope < -0.5):
                 writeData(0)
+                #print("0: Hard Left")
             else: 
                 writeData(63)
+                #print("63: Left")
         else:
             writeData(35)
+            #print("35: Moderate Left")
+    else:
+        writeData(127) 
+        #print("127: Straight default")
     # Send throttle (TODO: make better throttle parameters)
-    writeData(127) # Is this a good parameter @Tyler? 
+    #handle reinit for stream to avoid buffer error
