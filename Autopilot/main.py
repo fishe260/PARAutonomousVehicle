@@ -205,20 +205,20 @@ while (not exitProgram):
             y1=h - (i + 1) * window_height,
             y2=h - i * window_height,
             x=l_windows[-1].x if len(l_windows) > 0 else np.argmax(histogram[w // 2])
-    )
-    r_window = Window(
-        y1=h - (i + 1) * window_height,
-        y2=h - i * window_height,
-        x=r_windows[-1].x if len(r_windows) > 0 else np.argmax(histogram[w // 2:]) + w // 2
-    )
+        )
+        r_window = Window(
+            y1=h - (i + 1) * window_height,
+            y2=h - i * window_height,
+            x=r_windows[-1].x if len(r_windows) > 0 else np.argmax(histogram[w // 2:]) + w // 2
+        )
 
-    # Append nonzero indices in the window boundary to the lists
-    l_indices = np.append(l_indices, l_window.pixels_in(nonzero), axis=0)
-    r_indices = np.append(r_indices, r_window.pixels_in(nonzero), axis=0)
+        # Append nonzero indices in the window boundary to the lists
+        l_indices = np.append(l_indices, l_window.pixels_in(nonzero), axis=0)
+        r_indices = np.append(r_indices, r_window.pixels_in(nonzero), axis=0)
 
-    # Append respective windows
-    l_windows.append(l_window)
-    r_windows.append(r_window)
+        # Append respective windows
+        l_windows.append(l_window)
+        r_windows.append(r_window)
 
     # If either windows are empty, there is an error but we need to keep the cart going. Restart the image processing (hopefully the cart started already). 
     if (len(l_windows) or len(r_windows) == 0):
