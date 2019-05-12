@@ -251,7 +251,7 @@ while (not exitProgram):
             writeData(127)
     elif (slope <= 0):
         if (slope < -0.25):
-            if slope( < -0.5):
+            if (slope < -0.5):
                 writeData(0)
             else: 
                 writeData(63)
