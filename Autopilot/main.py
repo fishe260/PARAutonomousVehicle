@@ -183,6 +183,11 @@ while (not exitProgram):
     # Color threshold based off of sChannel
     colorMask = np.zeros_like(sChannel)
     colorMask[(sChannel >= 170) & (sChannel <= 255)]
+    
+    # Combine gradient and color masks
+    edges = np.zeros_like(gradientMask)
+    edges[(gradientMask == 1) | (colorMask == 1)] = 1
+    
 
     # Warp the image to get a "birds-eye" 
     (h, w) = (img.shape[0], img.shape[1])
@@ -190,11 +195,11 @@ while (not exitProgram):
     destination = np.float32([[100, 0], [w - 100, 0], [100, h], [w - 100, h]])
     transform_matrix = cv2.getPerspectiveTransform(source, destination)
     image = cv2.warpPerspective(img, transform_matrix, (w, h))
-    gradientMask = cv2.warpPerspective(gradientMask, transform_matrix, (w, h))
+    edges = cv2.warpPerspective(edges, transform_matrix, (w, h))
 
     """ Find lines """
-    histogram = np.sum(gradientMask[int(h / 2):, :], axis=0)
-    nonzero = gradientMask.nonzero() # finds the indices where the (now warped) mask is true
+    histogram = np.sum(edges[int(h / 2):, :], axis=0)
+    nonzero = edges.nonzero() # finds the indices where the (now warped) mask is true
 
     # Create empty lists to receive left and right lane pixel indices
     l_indices = np.empty([0], dtype=np.int)
