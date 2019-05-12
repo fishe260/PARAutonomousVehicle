@@ -127,7 +127,6 @@ class Line(object):
 
 #Initialize the camera and the image (which will hold a numpy array)
 camera = picamera.PiCamera()
-stream = picamera.array.PiRGBArray(camera) # Does not store data yet
 
 # Set the camera resolution 
 camera.resolution = (1920, 1080)
@@ -137,6 +136,9 @@ camera.resolution = (1920, 1080)
 
 exitProgram = False
 while (not exitProgram):
+    # Initialize stream 
+    stream = picamera.array.PiRGBArray(camera) # Does not store data yet
+    
     # Take photo and make it a numpy array
     camera.capture(stream, format = 'bgr')
     img = stream.array
@@ -221,7 +223,7 @@ while (not exitProgram):
         r_windows.append(r_window)
 
     # If either windows are empty, there is an error but we need to keep the cart going. Restart the image processing (hopefully the cart started already). 
-    if (len(l_windows) or len(r_windows) == 0):
+    if ((len(l_windows) == 0) or (len(r_windows) == 0)):
         continue
 
     leftLine = Line(x=nonzero[1][l_indices], y=nonzero[0][l_indices], h = h, w = w)
