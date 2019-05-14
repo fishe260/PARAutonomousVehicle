@@ -258,6 +258,8 @@ while (not exitProgram):
     # If either windows are empty, there is an error but we need to keep the cart going. Restart the image processing (hopefully the cart started already). 
     if ((len(l_windows) == 0) or (len(r_windows) == 0)):
         continue
+    if ((len(nonzero[1][l_indices]) == 0) or (len(nonzero[1][r_indices]) == 0)):
+        continue
 
     leftLine = Line(x=nonzero[1][l_indices], y=nonzero[0][l_indices], h = h, w = w)
     rightLine = Line(x=nonzero[1][r_indices], y=nonzero[0][r_indices], h=h, w = w)
