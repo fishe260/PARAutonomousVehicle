@@ -3,8 +3,8 @@ import numpy as np
 from collections import deque
 import picamera
 import picamera.array
-from smbus2 import SMBusWrapper	#I2c #has to be installed
-from I2C import writeData, readData #import functions from the I2C file
+import serial
+import math
 
 # Aidan's todos:
 # Work w/ Tyler to ensure proper I2C communication
@@ -16,6 +16,9 @@ l_windows = []
 r_windows = []
 address = 0x04 # Slave Address, set on Arduino
 channel = 1 
+
+slopeArray = [0, 0, 0, 0, 0]
+
 class Window(object):
     """
     Represents a scanning window used to detect points likely to represent lane edge lines.
@@ -124,6 +127,31 @@ class Line(object):
         enough_points = len(y) > 0 and np.max(y) - np.min(y) > self.h * .625
         if enough_points or len(self.coefficients) == 0:
             self.fit(x, y)
+    def get_points(self):
+        """
+        Generates points of the current best fit line.
+        Returns
+        -------
+        Array with x and y coordinates of pixels representing
+        current best approximation of a line.
+        """
+        y = np.linspace(0, self.h - 1, self.h)
+        current_fit = self.averaged_fit()
+        return np.stack((
+            current_fit[0] * y + current_fit[1], y
+        )).astype(np.int).T
+
+def scanFrameWithWindows(frame, windows):
+    indices = np.empty([0], dtype=np.int)
+    nonzero = frame.nonzero()
+    window_x = None
+    for window in windows:
+        indices = np.append(indices, window.pixels_in(nonzero, window_x), axis=0)
+        window_x = window.mean_x
+    return (nonzero[1][indices], nonzero[0][indices])
+
+# Set up communication with arduino
+arduino = serial.Serial(port = '/dev/ttyS0', baudrate = 115200)
 
 #Initialize the camera and the image (which will hold a numpy array)
 camera = picamera.PiCamera()
@@ -230,32 +258,41 @@ while (not exitProgram):
     # If either windows are empty, there is an error but we need to keep the cart going. Restart the image processing (hopefully the cart started already). 
     if ((len(l_windows) == 0) or (len(r_windows) == 0)):
         continue
+    if ((len(nonzero[1][l_indices]) == 0) or (len(nonzero[1][r_indices]) == 0)):
+        continue
 
     leftLine = Line(x=nonzero[1][l_indices], y=nonzero[0][l_indices], h = h, w = w)
     rightLine = Line(x=nonzero[1][r_indices], y=nonzero[0][r_indices], h=h, w = w)
+
+    (lX, lY) = scanFrameWithWindows(edges, l_windows)
+    leftLine.process_points(lX, lY)
+    (rX, rY) = scanFrameWithWindows(edges, r_windows)
+    rightLine.process_points(rX, rY)
 
     # Take the slopes and then average it
     slopeL = (leftLine.averaged_fit())
     slopeR = (rightLine.averaged_fit())
     slope = ((slopeL + slopeR) / 2)[0]
-    
-    # TODO: Train a RNN to determine the best slope and throttle
-    # Send steering based on the slope
-    if (slope > 0):
-        if (slope > 0.25): 
-            if (slope > 0.5): 
-                writeData(255)
-            else:
-                writeData(191)
-        else: 
-            writeData(127)
-    elif (slope <= 0):
-        if (slope < -0.25):
-            if (slope < -0.5):
-                writeData(0)
-            else: 
-                writeData(63)
-        else:
-            writeData(35)
-    # Send throttle (TODO: make better throttle parameters)
-    writeData(127) # Is this a good parameter @Tyler? 
+
+    # For later: if the slope is too large, make it a workeable value
+    if (slope > 0.5):
+        slope = 0.5
+    elif (slope < -0.5):
+        slope = -0.5
+
+    # Calculate the steering position needed
+    steeringValue = round((slope * 254)) + 128
+
+    # Add the slope to an array of the last 5 values used
+    slopeArray.pop(0)
+    slopeArray.append(4)
+
+    # Calculate the throttle
+    standardDev = math.stdev(slopeArray)
+    throttleValue = abs(255 - (500 * standardDev))
+
+    # Write the values to the arduino
+    arduino.write(b'*')
+    arduino.write(struct.pack('>B', steeringValue))
+    arduino.write(struct.pack('>B', throttleValue))
+    arduino.write(b'!')
