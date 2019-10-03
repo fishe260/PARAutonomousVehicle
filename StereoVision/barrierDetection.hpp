@@ -14,10 +14,20 @@
 using namespace std;
 using namespace cv;
 
-typedef struct detectedObj
+typedef struct DetectedObj
 {
     KeyPoint points;
-    int averageArea;
-} detectedObj;
+    double averageDepth;
+} DetectedObj;
+
+typedef struct Point
+{
+    Point( double X, double Y ): x(X), y(Y) {};
+    double x;
+    double y;
+} Point;
+
+Mat computeDisparity(Mat frameL, Mat frameR);
+vector<KeyPoint> detectObjs(Mat disparity, int areaFilter);
 
 #endif /* barrierDetection_h */

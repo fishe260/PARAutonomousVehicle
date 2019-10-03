@@ -2,6 +2,8 @@
 #include <opencv2/opencv.hpp>
 #include "barrierDetection.hpp"
 
+#define PI 3.14159
+
 using namespace std;
 using namespace cv;
 
