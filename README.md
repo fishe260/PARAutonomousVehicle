@@ -11,7 +11,9 @@ The team leads are as follows:
 Project Lead: Tyler Mahlmamn.
 
 Software Lead: Aidan Fisher.
-Electrical Lead: Noah Pictor. 
+
+Electrical Lead: Noah Pictor.
+
 Mechanical Lead: Shao-Ting Huang. 
 
 If you are interested in navigating our respository, please follow our guide as follows below. 
