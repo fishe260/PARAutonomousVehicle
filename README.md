@@ -22,7 +22,11 @@ Mechanical Lead: Shao-Ting Huang.
 
 If you are interested in navigating our respository, please follow our guide as follows below. 
 
+master: The latest stable code. 
+
 StereoVision: Holds the latest code relating to Object Detection (implemented via Stereo Vision). 
+
+SLAM: Holds the latest code relating to Simultaneous Localization and Mapping. This works mainly with the ROS library (Robotic Operating System). 
 
 RoadFollower: Holds the latest code relating to curve tracking, which when implemented navigates the track while on the kart's first lap in order to map out the track using Stereo Vision Object Detection. 
 
