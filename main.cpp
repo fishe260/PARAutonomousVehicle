@@ -13,11 +13,24 @@ using namespace cv;
 
 int main(int argc, char ** argv)
 {
-    // TODO: Use live feed for our left and right images
-    // argv[1] is our left image
-    // argv[2] is our right image
-    // argv[3] is our output path
-    // argv[4] is our output debug path
+    
+    // Turn on the RealSense Camera
+    rs2::pipeline realsensePipeline;
+    realsensePipeline.start();
+    
+    // Declare post-processing filters
+    rs2::hole_filling_filter holeFillingFilter;
+    
+    // Wait until a frame is retrieved from the camera
+    rs2::frameset frames = realsensePipeline.wait_for_frames();
+    
+    // Get depth image from camera (NOTE: this is not as a Mat!)
+    rs2::depth_frame depthFrame = frames.get_depth_frame();
+    rs2::frame colorFrame = frames.get_color_frame();
+    
+    // Fill holes in the depth frame
+    depthFrame = holeFillingFilter.process(depthFrame);
+    
     
     if (argc != 5)
     {
