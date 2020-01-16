@@ -52,3 +52,47 @@ points getPointclouds(depth_frame depthFrame)
     
     return pc.calculate(depthFrame);
 }
+
+/*
+ Inputs: Mat depthImage: an OpenCV-compatible (stereo) depth image
+         points pointcloudImage: pointclouds corresponding to the depth image
+         double pointcloudSideLength: the side length of a single pointcloud (they are all uniformly the same in theory).
+ Outputs: Mat depthPCIndex: the resulting matrix whose value at a certain (x, y) index at the depth image maps the corresponding point in the pointcloud domain.
+*/
+void convertDepthToPCindicdes(Mat depthImage, points pointcloudImage, double pointcloudSideLength, Mat depthPCIndex)
+{
+    depthPCIndex = Mat(depthImage.rows, depthImage.cols, CV_16U); // matrix that allows values from 0-65,535 (2^16 - 1) unsigned
+                                                                      // Matrix is the same size as the depthImage, as it requires it as a reference for pointcloud indices
+    
+    for (int x = 0; x < depthImage.rows; x++)
+    {
+        for (int y = 0; y < depthImage.cols; y++)
+        {
+            // Each index for the depthPCIndex has a corresponding index for the point clouds, affected by the pointcloudSideLength.
+            // Note that round returns a double, however we requested an int, so a cast was performed.
+            // TODO: Incorporate the height of the point in question. Intel Realsense has a pixel to point decoder function, and looking into that may be a good idea.
+            depthPCIndex.at<vector<int>>(x, y) = {(int) round(x / pointcloudSideLength), (int) round(y / pointcloudSideLength)};
+        }
+    }
+}
+
+Mat buildHeightMap (points pointcloudImage, int numRows, int numCols, int depth, Mat depthToPCIndex)
+{
+    // Index the point cloud image
+    
+    // Declare and allocate a height map, as a Mat type
+    Mat heightMap = Mat(numRows, numCols, CV_8U); // height map whose values are 8-bit (0-255) unsigned integers.
+    
+    for (int i = 0; i < numRows; i++)
+    {
+        for (int j = 0; j < numCols; j++)
+        {
+            vector<int> pcIndexVector = depthToPCIndex.at<vector<int>>(i, j);
+            // heightMap.at<int>(i, j) = depthToPCIndex[; // Access the depth of the pointcloud at this location and write it as the value at said specific index for the height map. TODO: Retrieve the height at the point.
+        }
+    }
+    
+    // TODO: Convert from int to Mat, either directly or through some BS means
+    
+    return heightMap;
+}
