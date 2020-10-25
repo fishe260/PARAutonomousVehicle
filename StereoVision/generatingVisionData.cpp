@@ -57,23 +57,28 @@ points getPointclouds(depth_frame depthFrame)
  Inputs: Mat depthImage: an OpenCV-compatible (stereo) depth image
          points pointcloudImage: pointclouds corresponding to the depth image
          double pointcloudSideLength: the side length of a single pointcloud (they are all uniformly the same in theory).
- Outputs: Mat depthPCIndex: the resulting matrix whose value at a certain (x, y) index at the depth image maps the corresponding point in the pointcloud domain.
+ Outputs: vector<vector<int>>*: reference of the resulting array whose value at a certain (x, y) index at the depth image maps the corresponding point in the pointcloud domain.
 */
-void convertDepthToPCindicdes(Mat depthImage, points pointcloudImage, double pointcloudSideLength, Mat depthPCIndex)
+vector<vector<int>>* convertDepthToPCIndices(Mat depthImage, points pointcloudImage, double pointcloudSideLength)
 {
-    depthPCIndex = Mat(depthImage.rows, depthImage.cols, CV_16U); // matrix that allows values from 0-65,535 (2^16 - 1) unsigned
-                                                                      // Matrix is the same size as the depthImage, as it requires it as a reference for pointcloud indices
     
-    for (int x = 0; x < depthImage.rows; x++)
+    vector<vector<int>> depthPCIndex; // a 2D array which holds the corresponding pointcloud to depth image indices
+    
+    float pixel[2] = {0}; // a C-style array which holds two floats to corresponding x, y pixel values. All values declared 0 for now.
+    float point[3] = {0}; // a C-style array which holds three floats corresponding to x, y, z pointcloud values. All values declared 0 for now.
+    
+    const vertex* vertices = pointcloudImage.get_vertices();
+    for (int i = 0; i < pointcloudImage.size(); i++)
     {
-        for (int y = 0; y < depthImage.cols; y++)
-        {
-            // Each index for the depthPCIndex has a corresponding index for the point clouds, affected by the pointcloudSideLength.
-            // Note that round returns a double, however we requested an int, so a cast was performed.
-            // TODO: Incorporate the height of the point in question. Intel Realsense has a pixel to point decoder function, and looking into that may be a good idea.
-            depthPCIndex.at<vector<int>>(x, y) = {(int) round(x / pointcloudSideLength), (int) round(y / pointcloudSideLength)};
-        }
+        point[0] = (float) vertices->x;
+        point[1] = (float) vertices->y;
+        point[2] = (float) vertices->z;
+        
+        // rs2_project_point_to_pixel(pixel, <#const struct rs2_intrinsics *intrin#>, point) // TODO: add intrinsics
+        
     }
+    
+    return NULL; // TODO: put in return type 
 }
 
 Mat buildHeightMap (points pointcloudImage, int numRows, int numCols, int depth, Mat depthToPCIndex)
@@ -96,3 +101,4 @@ Mat buildHeightMap (points pointcloudImage, int numRows, int numCols, int depth,
     
     return heightMap;
 }
+
