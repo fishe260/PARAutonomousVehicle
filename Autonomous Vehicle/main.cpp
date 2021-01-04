@@ -6,9 +6,27 @@
 //
 
 #include <iostream>
+#include <opencv.hpp>
+#include <librealsense2/rs.hpp>
+#include "StereoProcessor.hpp"
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
-    return 0;
+int main(int argc, const char * argv[])
+{
+    // create the pipeline
+    std::shared_ptr<rs2::pipeline> pipeline(new rs2::pipeline());
+    pipeline->start();
+    
+    // create a StereoProcessor, a class which processes data
+    // then, start the StereoProcessor
+    std::shared_ptr<StereoProcessor> stereoProcessor(new StereoProcessor());
+    stereoProcessor->startProcessor();
+    
+    // compute a disparity frame
+    stereoProcessor->computeDisparityFrame();
+    
+    // apply filters
+    stereoProcessor->applyFilters(); // TODO: Add filters to the processor
+    
+    // convert the frame to a Mat object (OpenCV)
+    stereoProcessor->computeDisparity();
 }
