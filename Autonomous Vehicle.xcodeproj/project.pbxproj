@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		86CC32A5258C262F00CAB013 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86CC32A4258C262F00CAB013 /* main.cpp */; };
-		86D80D1325C613FD00ABA05C /* I2CDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86D80D1125C613FD00ABA05C /* I2CDevice.cpp */; };
 		86DA79F9259B977400F9F0AB /* StereoProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DA79F7259B977400F9F0AB /* StereoProcessor.cpp */; };
 /* End PBXBuildFile section */
 
@@ -27,8 +26,6 @@
 /* Begin PBXFileReference section */
 		86CC32A1258C262F00CAB013 /* Autonomous Vehicle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Autonomous Vehicle"; sourceTree = BUILT_PRODUCTS_DIR; };
 		86CC32A4258C262F00CAB013 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		86D80D1125C613FD00ABA05C /* I2CDevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = I2CDevice.cpp; sourceTree = "<group>"; };
-		86D80D1225C613FD00ABA05C /* I2CDevice.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = I2CDevice.hpp; sourceTree = "<group>"; };
 		86DA79F7259B977400F9F0AB /* StereoProcessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StereoProcessor.cpp; sourceTree = "<group>"; };
 		86DA79F8259B977400F9F0AB /* StereoProcessor.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StereoProcessor.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -66,8 +63,6 @@
 				86CC32A4258C262F00CAB013 /* main.cpp */,
 				86DA79F7259B977400F9F0AB /* StereoProcessor.cpp */,
 				86DA79F8259B977400F9F0AB /* StereoProcessor.hpp */,
-				86D80D1125C613FD00ABA05C /* I2CDevice.cpp */,
-				86D80D1225C613FD00ABA05C /* I2CDevice.hpp */,
 			);
 			path = "Autonomous Vehicle";
 			sourceTree = "<group>";
@@ -129,7 +124,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				86DA79F9259B977400F9F0AB /* StereoProcessor.cpp in Sources */,
-				86D80D1325C613FD00ABA05C /* I2CDevice.cpp in Sources */,
 				86CC32A5258C262F00CAB013 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
