@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		86BCA4A325F43BB800F6D3B8 /* i2c.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86BCA4A125F43BB800F6D3B8 /* i2c.cpp */; };
 		86CC32A5258C262F00CAB013 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86CC32A4258C262F00CAB013 /* main.cpp */; };
 		86DA79F9259B977400F9F0AB /* StereoProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86DA79F7259B977400F9F0AB /* StereoProcessor.cpp */; };
 /* End PBXBuildFile section */
@@ -24,6 +25,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		86BCA4A125F43BB800F6D3B8 /* i2c.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = i2c.cpp; sourceTree = "<group>"; };
+		86BCA4A225F43BB800F6D3B8 /* i2c.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = i2c.hpp; sourceTree = "<group>"; };
 		86CC32A1258C262F00CAB013 /* Autonomous Vehicle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Autonomous Vehicle"; sourceTree = BUILT_PRODUCTS_DIR; };
 		86CC32A4258C262F00CAB013 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		86DA79F7259B977400F9F0AB /* StereoProcessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StereoProcessor.cpp; sourceTree = "<group>"; };
@@ -63,6 +66,8 @@
 				86CC32A4258C262F00CAB013 /* main.cpp */,
 				86DA79F7259B977400F9F0AB /* StereoProcessor.cpp */,
 				86DA79F8259B977400F9F0AB /* StereoProcessor.hpp */,
+				86BCA4A125F43BB800F6D3B8 /* i2c.cpp */,
+				86BCA4A225F43BB800F6D3B8 /* i2c.hpp */,
 			);
 			path = "Autonomous Vehicle";
 			sourceTree = "<group>";
@@ -123,6 +128,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86BCA4A325F43BB800F6D3B8 /* i2c.cpp in Sources */,
 				86DA79F9259B977400F9F0AB /* StereoProcessor.cpp in Sources */,
 				86CC32A5258C262F00CAB013 /* main.cpp in Sources */,
 			);

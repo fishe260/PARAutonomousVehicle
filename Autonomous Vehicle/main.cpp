@@ -9,6 +9,7 @@
 #include <opencv.hpp>
 #include <librealsense2/rs.hpp>
 #include "StereoProcessor.hpp"
+#include "i2c.h" // from libi2c
 
 int main(int argc, const char * argv[])
 {
