@@ -1,7 +1,3 @@
-//
-//  i2c.cpp
-//  Source: https://github.com/amaork/libi2c
-//
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -9,8 +5,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
-#include "i2c.hpp"
-
+#include "i2c.h"
 
 /* I2C default delay */
 #define I2C_DEFAULT_DELAY 1
@@ -28,9 +23,9 @@
 static void i2c_delay(unsigned char delay);
 
 /*
-**    @brief        :    Open i2c bus
-**    #bus_name    :    i2c bus name such as: /dev/i2c-1
-**    @return        :    failed return -1, success return i2c bus fd
+**	@brief		:	Open i2c bus
+**	#bus_name	:	i2c bus name such as: /dev/i2c-1
+**	@return		:	failed return -1, success return i2c bus fd
 */
 int i2c_open(const char *bus_name)
 {
@@ -53,8 +48,8 @@ void i2c_close(int bus)
 
 
 /*
-**    @brief        :    Initialize I2CDevice with defualt value
-**    #device        :    I2CDevice struct
+**	@brief		:	Initialize I2CDevice with defualt value
+**	#device	    :	I2CDevice struct
 */
 void i2c_init_device(I2CDevice *device)
 {
@@ -73,11 +68,11 @@ void i2c_init_device(I2CDevice *device)
 
 
 /*
-**    @brief        :    Get I2CDevice struct desc
-**    #device        :    I2CDevice struct
+**	@brief		:	Get I2CDevice struct desc
+**	#device	    :	I2CDevice struct
 **  #buf        :   Description message buffer
 **  #size       :   #buf size
-**    @return        :    return i2c device desc
+**	@return		:	return i2c device desc
 */
 char *i2c_get_device_desc(const I2CDevice *device, char *buf, size_t size)
 {
@@ -90,12 +85,12 @@ char *i2c_get_device_desc(const I2CDevice *device, char *buf, size_t size)
 
 
 /*
-**    i2c_ioctl_read/write
-**    I2C bus top layer interface to operation different i2c devide
-**    This function will call XXX:ioctl system call and will be related
-**    i2c-dev.c i2cdev_ioctl to operation i2c device.
-**    1. it can choice ignore or not ignore i2c bus ack signal (flags set I2C_M_IGNORE_NAK)
-**    2. it can choice ignore or not ignore i2c internal address
+**	i2c_ioctl_read/write
+**	I2C bus top layer interface to operation different i2c devide
+**	This function will call XXX:ioctl system call and will be related
+**	i2c-dev.c i2cdev_ioctl to operation i2c device.
+**	1. it can choice ignore or not ignore i2c bus ack signal (flags set I2C_M_IGNORE_NAK)
+**	2. it can choice ignore or not ignore i2c internal address
 **
 */
 ssize_t i2c_ioctl_read(const I2CDevice *device, unsigned int iaddr, void *buf, size_t len)
@@ -115,33 +110,33 @@ ssize_t i2c_ioctl_read(const I2CDevice *device, unsigned int iaddr, void *buf, s
         i2c_iaddr_convert(iaddr, device->iaddr_bytes, addr);
 
         /* First message is write internal address */
-        ioctl_msg[0].len    =    device->iaddr_bytes;
-        ioctl_msg[0].addr    =     device->addr;
-        ioctl_msg[0].buf    =     addr;
-        ioctl_msg[0].flags    =     flags;
+        ioctl_msg[0].len	=	device->iaddr_bytes;
+        ioctl_msg[0].addr	= 	device->addr;
+        ioctl_msg[0].buf	= 	addr;
+        ioctl_msg[0].flags	= 	flags;
 
         /* Second message is read data */
-        ioctl_msg[1].len    =     len;
-        ioctl_msg[1].addr    =     device->addr;
-        ioctl_msg[1].buf    =    buf;
-        ioctl_msg[1].flags    =    flags | I2C_M_RD;
+        ioctl_msg[1].len	= 	len;
+        ioctl_msg[1].addr	= 	device->addr;
+        ioctl_msg[1].buf	=	(unsigned char*) buf; // added pointer cast - Aidan 
+        ioctl_msg[1].flags	=	flags | I2C_M_RD;
 
         /* Package to i2c message to operation i2c device */
-        ioctl_data.nmsgs    =    2;
-        ioctl_data.msgs        =    ioctl_msg;
+        ioctl_data.nmsgs	=	2;
+        ioctl_data.msgs		=	ioctl_msg;
     }
     /* Target did not have internal address */
     else {
 
         /* Direct send read data message */
-        ioctl_msg[0].len    =     len;
-        ioctl_msg[0].addr    =     device->addr;
-        ioctl_msg[0].buf    =    buf;
-        ioctl_msg[0].flags    =    flags | I2C_M_RD;
+        ioctl_msg[0].len	= 	len;
+        ioctl_msg[0].addr	= 	device->addr;
+        ioctl_msg[0].buf	=	(unsigned char*) buf; // added pointer cast - Aidan 
+        ioctl_msg[0].flags	=	flags | I2C_M_RD;
 
         /* Package to i2c message to operation i2c device */
-        ioctl_data.nmsgs    =    1;
-        ioctl_data.msgs        =    ioctl_msg;
+        ioctl_data.nmsgs	=	1;
+        ioctl_data.msgs		=	ioctl_msg;
     }
 
     /* Using ioctl interface operation i2c device */
@@ -159,7 +154,7 @@ ssize_t i2c_ioctl_write(const I2CDevice *device, unsigned int iaddr, const void 
 {
     ssize_t remain = len;
     size_t size = 0, cnt = 0;
-    const unsigned char *buffer = buf;
+    const unsigned char *buffer = (unsigned char*) buf; // added pointer cast - Aidan 
     unsigned char delay = GET_I2C_DELAY(device->delay);
     unsigned short flags = GET_I2C_FLAGS(device->tenbit, device->flags);
 
@@ -182,13 +177,13 @@ ssize_t i2c_ioctl_write(const I2CDevice *device, unsigned int iaddr, const void 
         memset(&ioctl_msg, 0, sizeof(ioctl_msg));
         memset(&ioctl_data, 0, sizeof(ioctl_data));
 
-        ioctl_msg.len    =    device->iaddr_bytes + size;
-        ioctl_msg.addr    =    device->addr;
-        ioctl_msg.buf    =    tmp_buf;
-        ioctl_msg.flags    =    flags;
+        ioctl_msg.len	=	device->iaddr_bytes + size;
+        ioctl_msg.addr	=	device->addr;
+        ioctl_msg.buf	=	tmp_buf;
+        ioctl_msg.flags	=	flags;
 
-        ioctl_data.nmsgs =    1;
-        ioctl_data.msgs    =    &ioctl_msg;
+        ioctl_data.nmsgs =	1;
+        ioctl_data.msgs	=	&ioctl_msg;
 
         if (ioctl(device->bus, I2C_RDWR, (unsigned long)&ioctl_data) == -1) {
 
@@ -210,12 +205,12 @@ ssize_t i2c_ioctl_write(const I2CDevice *device, unsigned int iaddr, const void 
 
 
 /*
-**    @brief    :    read #len bytes data from #device #iaddr to #buf
-**    #device    :    I2CDevice struct, must call i2c_device_init first
-**    #iaddr    :    i2c_device internal address will read data from this address, no address set zero
-**    #buf    :    i2c data will read to here
-**    #len    :    how many data to read, lenght must less than or equal to buf size
-**    @return :     success return read data length, failed -1
+**	@brief	:	read #len bytes data from #device #iaddr to #buf
+**	#device	:	I2CDevice struct, must call i2c_device_init first
+**	#iaddr	:	i2c_device internal address will read data from this address, no address set zero
+**	#buf	:	i2c data will read to here
+**	#len	:	how many data to read, lenght must less than or equal to buf size
+**	@return : 	success return read data length, failed -1
 */
 ssize_t i2c_read(const I2CDevice *device, unsigned int iaddr, void *buf, size_t len)
 {
@@ -255,18 +250,19 @@ ssize_t i2c_read(const I2CDevice *device, unsigned int iaddr, void *buf, size_t 
 
 
 /*
-**    @brief    :    write #buf data to i2c #device #iaddr address
-**    #device    :    I2CDevice struct, must call i2c_device_init first
-**    #iaddr    :     i2c_device internal address, no address set zero
-**    #buf    :    data will write to i2c device
-**    #len    :    buf data length without '/0'
-**    @return    :     success return write data length, failed -1
+**	@brief	:	write #buf data to i2c #device #iaddr address
+**	#device	:	I2CDevice struct, must call i2c_device_init first
+**	#iaddr	: 	i2c_device internal address, no address set zero
+**	#buf	:	data will write to i2c device
+**	#len	:	buf data length without '/0'
+**	@return	: 	success return write data length, failed -1
 */
 ssize_t i2c_write(const I2CDevice *device, unsigned int iaddr, const void *buf, size_t len)
 {
     ssize_t remain = len;
+    ssize_t ret;
     size_t cnt = 0, size = 0;
-    const unsigned char *buffer = buf;
+    const unsigned char *buffer = (unsigned char*) buf; // added pointer cast - Aidan 
     unsigned char delay = GET_I2C_DELAY(device->delay);
     unsigned char tmp_buf[PAGE_MAX_BYTES + INT_ADDR_MAX_BYTES];
 
@@ -288,9 +284,11 @@ ssize_t i2c_write(const I2CDevice *device, unsigned int iaddr, const void *buf, 
         /* Copy data to tmp_buf */
         memcpy(tmp_buf + device->iaddr_bytes, buffer, size);
 
-        /* Write to buf content to i2c device length is address length and write buffer length */
-        if (write(device->bus, tmp_buf, device->iaddr_bytes + size) != device->iaddr_bytes + size) {
-
+        /* Write to buf content to i2c device length  is address length and
+                write buffer length */
+        ret = write(device->bus, tmp_buf, device->iaddr_bytes + size);
+        if (ret == -1 || (size_t)ret != device->iaddr_bytes + size)
+        {
             perror("I2C write error:");
             return -1;
         }
@@ -310,10 +308,10 @@ ssize_t i2c_write(const I2CDevice *device, unsigned int iaddr, const void *buf, 
 
 
 /*
-**    @brief    :    i2c internal address convert
-**    #iaddr    :    i2c device internal address
-**    #len    :    i2c device internal address length
-**    #addr    :    save convert address
+**	@brief	:	i2c internal address convert
+**	#iaddr	:	i2c device internal address
+**	#len	:	i2c device internal address length
+**	#addr	:	save convert address
 */
 void i2c_iaddr_convert(unsigned int iaddr, unsigned int len, unsigned char *addr)
 {
@@ -337,11 +335,11 @@ void i2c_iaddr_convert(unsigned int iaddr, unsigned int len, unsigned char *addr
 
 
 /*
-**    @brief        :    Select i2c address @i2c bus
-**    #bus        :    i2c bus fd
-**    #dev_addr    :    i2c device address
-**    #tenbit        :    i2c device address is tenbit
-**    #return        :    success return 0, failed return -1
+**	@brief		:	Select i2c address @i2c bus
+**	#bus		:	i2c bus fd
+**	#dev_addr	:	i2c device address
+**	#tenbit		:	i2c device address is tenbit
+**	#return		:	success return 0, failed return -1
 */
 int i2c_select(int bus, unsigned long dev_addr, unsigned long tenbit)
 {
@@ -363,10 +361,11 @@ int i2c_select(int bus, unsigned long dev_addr, unsigned long tenbit)
 }
 
 /*
-**    @brief    :    i2c delay
-**    #msec    :    milliscond to be delay
+**	@brief	:	i2c delay
+**	#msec	:	milliscond to be delay
 */
 static void i2c_delay(unsigned char msec)
 {
     usleep(msec * 1e3);
 }
+
