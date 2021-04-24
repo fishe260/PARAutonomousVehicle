@@ -268,7 +268,6 @@ ssize_t i2c_write(const I2CDevice *device, unsigned int iaddr, const void *buf, 
 
     /* Set i2c slave address */
     if (i2c_select(device->bus, device->addr, device->tenbit) == -1) {
-
         return -1;
     }
 
@@ -289,6 +288,7 @@ ssize_t i2c_write(const I2CDevice *device, unsigned int iaddr, const void *buf, 
         ret = write(device->bus, tmp_buf, device->iaddr_bytes + size);
         if (ret == -1 || (size_t)ret != device->iaddr_bytes + size)
         {
+			printf("ret: %d\n", ret); 
             perror("I2C write error:");
             return -1;
         }

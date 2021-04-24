@@ -6,7 +6,7 @@ int main (int argc, char** argv)
 {
 	// open the i2c bus and check whether it opened properly
 	int bus;
-	if ((bus = i2c_open("/dev/i2c-0")) == -1)
+	if ((bus = i2c_open("/dev/i2c-1")) == -1)
 	{
 		//std::cout << "Could not open the i2c bus" << std::endl; 
 		return -1; 
@@ -16,6 +16,8 @@ int main (int argc, char** argv)
 	I2CDevice slave;
 	i2c_init_device(&slave); 
 	slave.addr = 0x04; 
+	slave.bus = bus; 
+	slave.iaddr_bytes = 0; 
 
 	// write message to the slave
 	char* buffer = (char*) malloc(sizeof(char) * 5); 
@@ -25,7 +27,9 @@ int main (int argc, char** argv)
 	buffer[3] = '!'; 
 	buffer[4] = '!'; 
 
-	i2c_write(&slave, 0x0, "*AB!!", 5);  
+	i2c_write(&slave, 0x0, buffer, 5);
+  	
+	free(buffer);	
 
 	i2c_close(bus); 
 }
